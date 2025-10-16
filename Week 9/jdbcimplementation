@@ -1,0 +1,152 @@
+Of course\! Here is all the Java code for the entity, repository, and service in a single block for your finance tracker project.
+
+Remember to place each class in its own respective file within the correct package structure (e.g., `model`, `repository`, `service`).
+
+-----
+
+### All-in-One Java Code
+
+```java
+// File: src/main/java/com/yourpackage/financetracker/model/Transaction.java
+package com.yourpackage.financetracker.model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Entity
+public class Transaction {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String description;
+    private BigDecimal amount;
+    private LocalDate date;
+    private String category;
+
+    // --- Getters and Setters ---
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+}
+
+// ===================================================================================
+
+// File: src/main/java/com/yourpackage/financetracker/repository/TransactionRepository.java
+package com.yourpackage.financetracker.repository;
+
+import com.yourpackage.financetracker.model.Transaction;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+    // Spring Data JPA provides CRUD methods like save(), findAll(), findById(), deleteById() automatically.
+    // You can add custom finders here if needed, for example:
+    // List<Transaction> findByCategory(String category);
+}
+
+// ===================================================================================
+
+// File: src/main/java/com/yourpackage/financetracker/service/TransactionService.java
+package com.yourpackage.financetracker.service;
+
+import com.yourpackage.financetracker.model.Transaction;
+import com.yourpackage.financetracker.repository.TransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class TransactionService {
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    // Create a new transaction
+    public Transaction saveTransaction(Transaction transaction) {
+        return transactionRepository.save(transaction);
+    }
+
+    // Get all transactions
+    public List<Transaction> getAllTransactions() {
+        return transactionRepository.findAll();
+    }
+
+    // Get a single transaction by its ID
+    public Optional<Transaction> getTransactionById(Long id) {
+        return transactionRepository.findById(id);
+    }
+
+    // Delete a transaction by its ID
+    public void deleteTransaction(Long id) {
+        transactionRepository.deleteById(id);
+    }
+}
+
+```
+
+### Don't Forget\!
+
+You still need to configure your project correctly for this code to work:
+
+1.  **`pom.xml` Dependencies:** Make sure you have `spring-boot-starter-data-jpa` and your database driver (e.g., `mysql-connector-java`).
+2.  **`application.properties`:** Configure your database URL, username, and password.
+
+<!-- end list -->
+
+```properties
+# src/main/resources/application.properties
+
+# Database Connection Settings
+spring.datasource.url=jdbc:mysql://localhost:3306/finance_tracker
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+
+# JPA/Hibernate Settings
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
